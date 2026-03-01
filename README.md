@@ -1,6 +1,6 @@
 # Forest
 
-A document-to-knowledge-graph pipeline built on [Forester](https://www.jonmsterling.com/jms-005P.xml). It ingests papers and books, extracts concepts, discovers semantic relations, and produces a static HTML forest with full-text search, keyboard navigation, and interactive graph visualization.
+A document-to-knowledge-graph pipeline built on [Forester](https://www.forester-notes.org/index/index.xml). It ingests papers and books, extracts concepts, discovers semantic relations, and produces a static HTML forest with full-text search, keyboard navigation, and interactive graph visualization.
 
 ## Pipeline
 
