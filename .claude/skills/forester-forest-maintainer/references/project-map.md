@@ -2,7 +2,7 @@
 
 ## What This Project Is
 
-A Forester-based personal knowledge forest that transforms source documents (academic papers, books, guides) into interconnected concept graphs. Each document goes through a 7-step pipeline (see `skills/forester-pipeline/`) that extracts concepts, defines them as `.tree` files, discovers semantic relations between them, and assembles chapter/paper indices. The result is a static site with a Cytoscape.js graph panel showing concept relationships.
+A Forester-based personal knowledge forest that transforms source documents (academic papers, books, guides) into interconnected concept graphs. Each document goes through a 7-step pipeline (see `.claude/skills/forester-pipeline/`) that extracts concepts, defines them as `.tree` files, discovers semantic relations between them, and assembles chapter/paper indices. The result is a static site with a Cytoscape.js graph panel showing concept relationships.
 
 ## Repository Layout
 
@@ -44,20 +44,19 @@ forest/
 ├── scripts/
 │   └── migrate_relations.py     # Migrates \relation{a}{b}{c} to \relation{a}{b}{c}{true}
 ├── docs/plans/                  # Design documents
-├── skills/                      # Reusable skills
-│   ├── forester-forest-maintainer/  # This skill (maintenance workflows)
-│   ├── forester-pipeline/           # Pipeline orchestrator (7-step sequencing)
-│   ├── paper-ingestion/             # Step 1: PDF/text to chunked markdown
-│   ├── concept-registry/            # Step 2: Concept identification and cataloging
-│   └── layered-crossing-hca-layout/ # Graph layout algorithm reference
-└── .claude/skills/              # Claude Code skills (pipeline step implementations)
+└── .claude/skills/              # All Claude Code skills
+    ├── forester-forest-maintainer/  # Forest maintenance workflows
+    ├── forester-pipeline/           # Pipeline orchestrator (7-step sequencing)
+    ├── paper-ingestion/             # Step 1: PDF/text to chunked markdown
+    ├── concept-registry/            # Step 2: Concept identification and cataloging
     ├── concept-definition-researcher/  # Step 3.1: Generate concept .tree files
+    ├── research-concepts/              # Step 3.1 orchestrator
     ├── find-concept-relations/         # Step 3.2 helper: per-concept relation finding
     ├── find-relations/                 # Step 3.2: Orchestrate relation discovery
     ├── generate-chapter-index/         # Step 3.3: Per-chapter index .tree files
     ├── generate-paper-index/           # Step 3.4: Top-level paper index .tree
-    ├── research-concepts/              # Step 3.1 orchestrator
-    └── validate-document/              # Step 4: Validation + person tree
+    ├── validate-document/              # Step 4: Validation + person tree
+    └── layered-crossing-hca-layout/    # Graph layout algorithm reference
 ```
 
 ## Data and Rendering Flow
@@ -112,7 +111,7 @@ Source document (PDF/text)
 
 ## Practical Checks
 
-- Run `python3 skills/forester-forest-maintainer/scripts/validate_forest.py` after edits touching links/relations.
+- Run `python3 .claude/skills/forester-forest-maintainer/scripts/validate_forest.py` after edits touching links/relations.
 - Re-run `python3 aggregate_graph.py` after relation changes.
 - Prefer editing source files and re-bundling instead of patching generated artifacts.
 - For local preview: `forester build && python3 aggregate_graph.py && live-server --port=1313 --host=localhost output`.

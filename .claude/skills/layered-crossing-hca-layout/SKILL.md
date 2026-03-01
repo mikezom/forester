@@ -37,7 +37,7 @@ If long edges span multiple layers, convert them into proper segments by inserti
 
 - Reuse the implementation blueprint in:
   - `layout_processor.py` (`WeightedLayeredLayout`)
-  - `skills/brandes-koepf-hca/scripts/brandes_koepf_hca.py`
+  - `.claude/skills/brandes-koepf-hca/scripts/brandes_koepf_hca.py`
 - Keep deterministic seeds for reproducible layouts.
 - Preserve legacy output shapes when integrating into an existing frontend renderer.
 

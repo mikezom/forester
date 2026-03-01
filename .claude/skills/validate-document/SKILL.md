@@ -168,10 +168,10 @@ Ask the user before applying any fixes.
 
 ## Existing Validation Script
 
-The project includes a forest-wide validation script at `skills/forester-forest-maintainer/scripts/validate_forest.py`. After document-level validation, suggest running it for a full forest check:
+The project includes a forest-wide validation script at `.claude/skills/forester-forest-maintainer/scripts/validate_forest.py`. After document-level validation, suggest running it for a full forest check:
 
 ```bash
-python skills/forester-forest-maintainer/scripts/validate_forest.py --root .
+python .claude/skills/forester-forest-maintainer/scripts/validate_forest.py --root .
 ```
 
 This script checks duplicate IDs, missing titles, link validity, transclusion targets, and relation references across the entire forest.

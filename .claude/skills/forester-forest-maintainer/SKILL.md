@@ -7,7 +7,7 @@ description: Maintain and extend the Forester knowledge-forest project at /Users
 
 ## Overview
 
-This project is a Forester-based personal knowledge forest that transforms source documents (academic papers, books, guides) into interconnected concept graphs. Each document goes through a 7-step pipeline (orchestrated by `skills/forester-pipeline/`) that extracts concepts, defines them as `.tree` files, discovers semantic relations, and assembles chapter/paper indices. The result is a static site with an interactive Cytoscape.js graph panel showing concept relationships.
+This project is a Forester-based personal knowledge forest that transforms source documents (academic papers, books, guides) into interconnected concept graphs. Each document goes through a 7-step pipeline (orchestrated by `.claude/skills/forester-pipeline/`) that extracts concepts, defines them as `.tree` files, discovers semantic relations, and assembles chapter/paper indices. The result is a static site with an interactive Cytoscape.js graph panel showing concept relationships.
 
 Read `references/project-map.md` at the start of non-trivial tasks for the full repository layout, pipeline flow, and conventions.
 
@@ -75,7 +75,7 @@ Key design aspects to preserve when modifying graph.js:
 Run project validation after meaningful edits:
 
 ```bash
-python3 skills/forester-forest-maintainer/scripts/validate_forest.py
+python3 .claude/skills/forester-forest-maintainer/scripts/validate_forest.py
 ```
 
 Use `--strict` only when you explicitly want a failing exit code on unresolved errors.

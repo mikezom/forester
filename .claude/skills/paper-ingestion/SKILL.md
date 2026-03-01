@@ -41,10 +41,10 @@ Run the helper script to convert the PDF to markdown first, then work from that 
 
 ```bash
 # Process the whole PDF at once
-python skills/paper-ingestion/glm_ocr.py path/to/document.pdf --output intermediate/<document-name>/ingestion/ocr_raw.md
+python .claude/skills/paper-ingestion/glm_ocr.py path/to/document.pdf --output intermediate/<document-name>/ingestion/ocr_raw.md
 
 # For large PDFs or when whole-PDF processing fails, use page-by-page mode (requires PyMuPDF)
-python skills/paper-ingestion/glm_ocr.py path/to/document.pdf --page-by-page --output intermediate/<document-name>/ingestion/ocr_raw.md
+python .claude/skills/paper-ingestion/glm_ocr.py path/to/document.pdf --page-by-page --output intermediate/<document-name>/ingestion/ocr_raw.md
 ```
 
 The script requires the `ZAI_API_KEY` environment variable. It uses the ZhipuAI GLM-OCR model (`zai-sdk` package) and outputs structured markdown. When using `--page-by-page`, each page is rendered at 300 DPI and processed individually with a 1-second delay between API calls.
@@ -71,7 +71,7 @@ intermediate/{document-name}/ingestion/
 
 Read the source material completely. For PDFs, start with the Read tool (which supports PDF). For large PDFs, read in page ranges. For raw text, work with what's provided.
 
-If the Read tool produces poor results for a PDF (garbled text, missing content, mangled tables/formulas, or the PDF is clearly a scan), fall back to GLM-OCR. Run `python skills/paper-ingestion/glm_ocr.py <pdf-path> --output intermediate/<document-name>/ingestion/ocr_raw.md` and use that markdown output as your source. See the "PDF Processing Methods" section above for details.
+If the Read tool produces poor results for a PDF (garbled text, missing content, mangled tables/formulas, or the PDF is clearly a scan), fall back to GLM-OCR. Run `python .claude/skills/paper-ingestion/glm_ocr.py <pdf-path> --output intermediate/<document-name>/ingestion/ocr_raw.md` and use that markdown output as your source. See the "PDF Processing Methods" section above for details.
 
 Identify:
 - The document's title, authors, year, and venue/publisher
