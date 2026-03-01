@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug Forest Graph",
+      "type": "chrome",
+      "request": "launch",
+      "url": "http://localhost:1313",
+      "webRoot": "${workspaceFolder}/output",
+      "sourceMaps": true,
+      "userDataDir": false
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "mcp__fast-filesystem__fast_get_directory_tree",
+      "WebSearch",
+      "Bash(echo \"=== .claude/skills ===\" && ls -R /Users/wanyu/Sync/Study/forest/.claude/skills/ && echo \"\" && echo \"=== skills/ \\(project\\) ===\" && ls /Users/wanyu/Sync/Study/forest/skills/ && echo \"\" && echo \"=== research_concepts.py ===\" && test -f /Users/wanyu/Sync/Study/forest/research_concepts.py && echo \"exists\")",
+      "Bash(find /Users/wanyu/Sync/Study/forest -type f -name \"*relation*\" 2>/dev/null | head -50)",
+      "Bash(python scripts/migrate_relations.py)",
+      "mcp__web-reader__webReader",
+      "mcp__web-search-prime__webSearchPrime",
+      "Bash(echo \"=== Skill locations ===\" && ls -d /Users/wanyu/Sync/Study/forest/skills/*/SKILL.md /Users/wanyu/Sync/Study/forest/.claude/skills/*/SKILL.md 2>/dev/null && echo \"=== Script locations ===\" && ls /Users/wanyu/Sync/Study/forest/find_relations.py /Users/wanyu/Sync/Study/forest/research_concepts.py /Users/wanyu/Sync/Study/forest/glm_ocr.py 2>/dev/null)",
+      "Bash(python skills/paper-ingestion/glm_ocr.py resources/The-Complete-Guide-to-Building-Skill-for-Claude.pdf --page-by-page --output intermediate/building-skill-for-claude/ingestion/ocr_raw.md)",
+      "Bash(python .claude/skills/research-concepts/research_concepts.py building-skill-for-claude --delay 3)",
+      "Bash(find intermediate/building-skill-for-claude/trees -name \"*.tree\" 2>/dev/null | wc -l)",
+      "Bash(python .claude/skills/research-concepts/research_concepts.py building-skill-for-claude 2>&1)",
+      "Bash(python3 -c \"import anthropic; print\\(anthropic.__version__\\)\" 2>&1)",
+      "mcp__zread__search_doc",
+      "Bash(ls -d /Users/wanyu/Sync/Study/forest/intermediate/building-skill-for-claude/trees/*/ 2>/dev/null || echo \"No subdirectories found\")",
+      "Bash(ls -la /Users/wanyu/Sync/Study/forest/intermediate/building-skill-for-claude/trees/*/)",
+      "Bash(ls /Users/wanyu/Sync/Study/forest/intermediate/building-skill-for-claude/trees/*/009-*-index.tree 2>/dev/null | wc -l)",
+      "Bash(grep -roh '\\\\\\([0-9][0-9][0-9]-[a-z0-9-]*\\\\\\)' --include=\"*.tree\" 2>/dev/null | sort -u | wc -l)",
+      "mcp__fast-filesystem__fast_read_file",
+      "mcp__fast-filesystem__fast_list_directory"
+    ]
+  }
+}

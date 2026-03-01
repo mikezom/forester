@@ -1,0 +1,3 @@
+interface:
+  display_name: "Layered Crossing + HCA Layout"
+  short_description: "Build layered layout pipelines with crossing reduction and HCA"

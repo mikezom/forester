@@ -1,0 +1,4 @@
+interface:
+  display_name: "Forester Forest Maintainer"
+  short_description: "Maintain this Forester study forest and graph workflows"
+  default_prompt: "Maintain and extend this Forester project: edit tree notes, semantic relations, graph extraction, and theme integration while preserving project conventions."
