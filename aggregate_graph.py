@@ -46,7 +46,7 @@ def aggregate_graph(output_dir="output"):
         for src, rel, tgt, mentioned in unique_edges
     ]
                 
-    output_file = output_path / "graph.json"
+    output_file = output_path / "forest" / "graph.json"
     with open(output_file, "w", encoding="utf-8") as out_file:
         # Save both nodes mapping and edges list
         json.dump({"nodes": nodes_dict, "edges": edges_list}, out_file, indent=2, ensure_ascii=False)
