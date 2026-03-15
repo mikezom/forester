@@ -1,62 +1,108 @@
 # Workflow Playbook
 
-## 1) Layering and Proper Graph Conversion
+Describes the algorithm phases as implemented in `theme/graph.js`.
 
-1. Choose a layer index for each real node (weight bucket or topological depth).
-2. Keep stable initial order inside each layer.
-3. For each edge crossing more than one layer:
-   - insert dummy nodes for intermediate layers,
-   - split into adjacent-layer segments,
-   - save an `edge_path` mapping to reconstruct final bends.
+## 1) Component Detection
 
-Result: proper layered graph (every segment spans one layer).
+1. Build undirected adjacency from all edges.
+2. BFS from each unvisited node to find weakly connected components.
+3. Return `{ nodeIds, nodeSet, edges }` per component.
+4. Each component is laid out independently, then packed together.
 
-## 2) Crossing Reduction (Quality-First)
+## 2) Layer Assignment (BFS from Root)
 
-Use hybrid crossing reduction:
+1. Pick root: the current page node if in the component, else the first node.
+2. BFS outward from root:
+   - outgoing edges assign `rank + 1` to target,
+   - incoming edges assign `rank - 1` to source.
+3. For nodes with mixed connectivity, use median of already-assigned neighbors.
+4. Normalize all ranks so minimum is 0.
+5. Group nodes into layers by rank index.
 
-1. Multi-start runs from lightly perturbed layer orders.
-2. Bidirectional sweep rounds:
-   - downward then upward,
-   - median primary key, barycenter tie-break.
-3. Iterative transpose swaps adjacent vertices while crossing count improves.
-4. Sifting rounds move one vertex across all candidate positions.
-5. Keep best run by total crossing count.
+## 3) Dummy Expansion (Proper Graph)
 
-Optional exact refinement:
+For each edge spanning more than one layer:
+1. Insert dummy nodes at each intermediate layer (`isDummy: true`).
+2. Split into adjacent-layer segments.
+3. Preserve the relation label only on the middle segment.
+4. Build edge-path mapping for later polyline reconstruction.
 
-- solve one layer at a time with pairwise precedence variables and transitivity constraints,
-- enforce short time limits per layer,
-- fallback to hybrid when no solver is available.
+Result: proper layered graph where every edge spans exactly one layer.
 
-## 3) Brandes-Koepf Horizontal Assignment
+## 4) Crossing Reduction (Hybrid)
 
-Feed the reduced proper graph to Brandes-Koepf HCA:
+### Multi-start (4 runs)
 
-1. preprocess type-1 conflicts,
-2. compute 4 biased assignments (`up/down` x `left/right`),
-3. compact each assignment,
-4. align to smallest width assignment,
-5. combine with average median.
+Each run starts with a perturbed initial order:
+- `stableHash`-based seed determines shuffle/reverse per layer.
+- Keeps best result across all runs.
 
-Outputs `x` for real + dummy nodes.
+### Bidirectional Sweep (6 rounds per run)
 
-## 4) Coordinate Finalization and Merge-Back
+Each round:
+1. **Downward pass:** reorder each layer based on upper neighbors.
+2. **Upward pass:** reorder each layer based on lower neighbors.
 
-1. Map layer index to `y`.
-2. Normalize and scale `x`.
-3. Real nodes:
-   - write final top-left node coordinates (`x`, `y`) for renderer.
-4. Original edges:
-   - convert dummy nodes in `edge_path` to turning points,
-   - store ordered points as `[{x, y, node_id, is_dummy}]`.
+Sort keys for `reorderLayer()`:
+- Primary: **median** index of connected nodes in the fixed layer.
+- Secondary: **barycenter** (average index of connected nodes).
+- Tertiary: original position (stability).
 
-## 5) Recommended Defaults
+### Transpose (12 rounds per run)
 
-- `crossing_method = "hybrid"`
-- `multi_start_runs = 12`
-- `sweep_rounds = 8`
-- `transpose_max_rounds = 20`
-- `sifting_rounds = 2`
-- `random_seed = 42`
-- `type2_mode = "ignore"` (unless strict handling required)
+1. For each layer, try swapping adjacent node pairs.
+2. Accept swap only if total crossing count decreases.
+3. Stop early if a full round produces no improvement.
+
+### Selection
+
+Keep the ordering with the lowest total crossing count across all multi-start runs.
+
+## 5) Brandes-Koepf Horizontal Coordinate Assignment
+
+Feed the crossing-reduced proper graph to HCA:
+
+1. Compute 4 biased assignments (`up/down × left/right`):
+   - Traverse layers in direction order.
+   - Desired x = median of already-assigned neighbor x-coordinates.
+   - Compact: ensure x >= previous node's x + 1 (no overlaps).
+2. Align all 4 to the narrowest-width assignment (center alignment).
+3. Combine per node: take median of the 4 aligned x values.
+
+Outputs `x` for all nodes (real + dummy).
+
+## 6) Coordinate Scaling
+
+```
+x_final = hca_x × 210    (horizontal spacing)
+y_final = layer_rank × 160  (vertical spacing)
+```
+
+## 7) Component Packing
+
+1. Sort components by: highlight priority (current page first), then root name.
+2. Pack left-to-right in rows:
+   - `xGap = 180` between component bounding boxes.
+   - `yGap = 180` between rows.
+   - `targetRowWidth = max(1000, canvasWidth × 1.8)`.
+3. Center final bounding box at origin.
+
+## 8) Polyline Reconstruction
+
+For edges that passed through dummy nodes:
+- `getFullPolylineEdges()` traverses the dummy chain.
+- Collects `(x, y)` at each dummy node as turning points.
+- Stores ordered points for edge rendering.
+
+## Tuned Defaults (Browser-Optimized)
+
+| Parameter | Value | Notes |
+|-----------|-------|-------|
+| `multiStartRuns` | 4 | Tuned down from 12 for browser perf |
+| `sweepRounds` | 6 | Tuned down from 8 |
+| `transposeRounds` | 12 | Tuned down from 20 |
+| `xSpacing` | 210 | Pixels between nodes horizontally |
+| `ySpacing` | 160 | Pixels between layers vertically |
+| `xGap` | 180 | Pixels between packed components |
+| `yGap` | 180 | Pixels between packed rows |
+| `type2_mode` | ignore | Type-2 conflict handling in HCA |
